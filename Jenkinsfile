@@ -29,11 +29,10 @@ pipeline {
 
         stage('1. Compile ma nguon') {
             steps {
-                echo "== Compiling Go source =="
+                echo "== Compiling Go source (chay trong container golang) =="
                 sh '''
-                    go version
-                    go mod download || true
-                    CGO_ENABLED=0 GOOS=linux go build -o server .
+                    docker run --rm -v "$PWD":/app -w /app golang:1.22-alpine \
+                        sh -c "go version && go mod download || true && CGO_ENABLED=0 GOOS=linux go build -o server ."
                 '''
             }
         }
