@@ -7,7 +7,7 @@ pipeline {
 
         // Thong tin registry va image
         DOCKER_REGISTRY   = 'docker.io'                       // doi thanh registry khac neu can, vd: your-registry.com
-        DOCKER_IMAGE_NAME = 'phamquocdow'
+        DOCKER_IMAGE_NAME = 'phamquocdow/golang-ci-demo'
         IMAGE_TAG         = "${env.BUILD_NUMBER}"
         FULL_IMAGE_NAME   = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"
         LATEST_IMAGE_NAME = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:latest"
