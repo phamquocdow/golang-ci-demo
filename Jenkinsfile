@@ -7,7 +7,7 @@ pipeline {
 
         // Thong tin registry va image
         DOCKER_REGISTRY   = 'docker.io'                       // doi thanh registry khac neu can, vd: your-registry.com
-        DOCKER_IMAGE_NAME = 'phamquocdow/golang-ci-demo'
+        DOCKER_IMAGE_NAME = 'your-dockerhub-username/golang-ci-demo'
         IMAGE_TAG         = "${env.BUILD_NUMBER}"
         FULL_IMAGE_NAME   = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"
         LATEST_IMAGE_NAME = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:latest"
@@ -29,11 +29,16 @@ pipeline {
 
         stage('1. Compile ma nguon') {
             steps {
-                echo "== Compiling Go source (chay trong container golang) =="
-                sh '''
-                    docker run --rm -v "$PWD":/app -w /app golang:1.22-alpine \
-                        sh -c "go version && go mod download || true && CGO_ENABLED=0 GOOS=linux go build -o server ."
-                '''
+                script {
+                    docker.image('golang:1.22-alpine').inside('-u root') {
+                        echo "== Compiling Go source (chay trong container golang) =="
+                        sh '''
+                            go version
+                            go mod download || true
+                            CGO_ENABLED=0 GOOS=linux go build -o server .
+                        '''
+                    }
+                }
             }
         }
 
